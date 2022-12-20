@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>teste de form</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<style>
+    body{
+        background-image: url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/7a4f2faf-7d57-48f8-8b4e-ea655774db6b/ddrfu5v-8497eeac-ad03-4abf-957a-63159599231e.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzdhNGYyZmFmLTdkNTctNDhmOC04YjRlLWVhNjU1Nzc0ZGI2YlwvZGRyZnU1di04NDk3ZWVhYy1hZDAzLTRhYmYtOTU3YS02MzE1OTU5OTIzMWUuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.SbdmPxKow9FRyC7SIOIuyFJIYM7go6XiJjAu4L0wRaU);
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    #divTitulo{
+        border-radius: 15px;
+        background-color: cornflowerblue;
+        width: fit-content;
+        margin: auto;
+
+    }
+    #mae{
+        margin: auto;
+        transform: translate(-50%, -50);
+        width: 240px;
+        height: 190px;
+    }
+    fieldset{
+        border-radius: 20px;
+        background-color: cornflowerblue;
+    }
+    h3{
+        font-size: medium !important;
+    }
+    label{
+        margin-top: 20px;
+        font-family: "Zen Dots";
+    }
+    input{
+        margin-bottom: 10px;
+        font-family: "Zen Dots";
+    }
+    button{
+        border-radius: 15px; border: none; 
+    }
+    button:hover{
+        background-color: #1950FF;
+        cursor: pointer;
+    }
+
+</style>
+<body>
+<div id="divTitulo"><h1 class="titulo">Catálogo de jogos</h1></div>
+    <div style="align-items: center;" id="mae">
+        <fieldset>
+            <form action="buscaAnuncios">
+                <h3 class="titulo">Busque aqui!</h3>
+                <br>
+                <label  for="categoria">Categoria:</label>
+                <select style="margin-bottom: 10px;" name="categoria" id="categoria">
+                    <option value="0"></option>
+                    <option value="1">Game (jogo)</option>
+                    <option value="2">Console</option>
+                    <option value="3">Conta de game</option>
+                    <option value="4">Periférico</option>
+                    <option value="5">Skin</option>
+                    <option value="6">Item interno</option>
+                    <option value="">Action Figure</option>
+                </select>
+                <br>
+                <label for="produto">Produto:</label>
+                <input type="text" name="produto" placeholder="Título do produto" id="produto">
+                <br>
+                <label for="desc">Descrição:</label>
+                <textarea placeholder="Descrição do produto (max 150 caracteres)" maxlength="150" name="desc" id="desc" style="font-family: 'Zen Dots'; margin-bottom: 10px; width: 250; height: 80;"></textarea> 
+                <br>
+                <label for="preco">Preço:</label>
+                <input placeholder="Apenas números" type="text" name="preco" id="preco">
+                    <div style="text-align: center; margin-top: 15px; height: min-content;" id="divbtn">
+                        <button style=" margin-right: 15px;" type="submit">Buscar</button>
+                        <button style=" margin-left: 15px;" type="reset">Limpar</button>
+                    </div>
+                <br>
+            </form>
+        </fieldset>
+    </div>
+
+    <script>
+        async function buscaAnuncios(){
+           await axios.get("http://localhost:8081/anuncios")
+            .then((response)=>{
+                console.log(response)
+            })
+            .catch((erro)=>console.error(erro))
+        }
+        buscaAnuncios()
+    </script>
+</body>
+</html>

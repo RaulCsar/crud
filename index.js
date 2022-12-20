@@ -77,22 +77,19 @@ function salvar() {
     ultimoIdInserido = dados[dados.length - 1].ID + 1;
   }
   var registro = {};
+
   registro.ID = ultimoIdInserido;
-  
-  
+
   registro.Game = Game.value;
   registro.Producer = Producer.value;
-  var data = new Date(Launch.value);
-  registro.Launch = data;
-  console.log(data);
-
+  registro.Launch = Launch.value;
   registro.Console = Console.value;
   registro.Excluir = document.createElement("input").value;
 
   localStorage.getItem("__dados__");
   dados.push(registro);
   localStorage.setItem("__dados__", JSON.stringify(dados));
-//aaaaaaaaaaaaaaaaaaaaaaaaaaa
+
   //LIMPA OS NOMES DOS INPUTS
   limpaCampos();
   location.reload();
@@ -190,3 +187,24 @@ function editar(id) {
     }
   });
 }*/
+// key: 827bd4fbd7ff4c289957c6f15f436093
+
+/*
+buscaPokemon();
+
+EXECUTANDO UMA REQUISIÇÃO GET
+function buscaPokemon() {
+  const pokemonUrl = "https://pokeapi.co/api/v2";
+  axios
+    .get(`${pokemonUrl}/pokemon/ditto`)
+    .then(function (response) {
+      //manipula o sucesso da requisição
+      console.log(response);
+    })
+    .catch(function (error) {
+      //manipula erros da requisição
+      console.error(error);
+    });
+}
+buscaPokemon();
+*/
