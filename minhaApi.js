@@ -4,25 +4,28 @@ const port = 8081;
 const fs = require("fs");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const data = require("./meuBD.json");
+
 app.use(cors());
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
 let encodedParser = bodyParser.urlencoded({ extended: false });
 
 app.get("/", (req, res) => {
   res.send("<p> Teste</p>");
 });
-/*
+
 app.get("/buscaItem", (req, res) => {
-  let form = "<form action='/anuncios' method='GET'>";
+  var form = "<form action='/anuncios' method='GET'>";
   form += "<label>categoria: </label><input type='text' name='categoria'><br>";
-  form += "<label>Produto: </label><input type='text' name='produto'><br>";
-  form += "<label>Descrição: </label><input type='text' name='descricao'><br>";
-  form += "<label>Preço: </label><input type='text' name='preco'><br>";
+  form += "<label>:produto </label><input type='text' name='busca'>";
+  form += "<label>:preco </label><input type='text' name='preco'>";
   form += "<button>Buscar</button></form>";
 
-  res.send("<div>Procure aqui!</div><br>" + form);
-});*/
+  res.send("<div>Procure o seu produto.</div><br>" + form);
+});
 
-app.post("/anuncios", encodedParser, (req, res) => {
+app.post("/anuncios", (req, res) => {
   let categoria = req.body.categoria;
   let produto = req.body.produto;
   let descricao = req.body.descricao;
@@ -33,6 +36,8 @@ app.post("/anuncios", encodedParser, (req, res) => {
     descricao: descricao,
     preco: preco,
   };
+  console.log("cheguei aqui", req.body)
+
 
   fs.readFile("meuBD.json", "utf-8", (erro, texto) => {
     if (erro) throw "erro" + erro;
@@ -52,35 +57,66 @@ app.post("/anuncios", encodedParser, (req, res) => {
 });
 
 app.get("/anuncios", (req, res) => {
-  let categoria = req.query.categoria;
-  let produto = req.query.produto;
-  let preco = req.query.preco;
+  /* let categoria = req.query.categoria || "";
+    let produto = req.query.produto || "";
+    let preco = req.query.preco || "";
 
-  console.log(req.query);
+    fs.readFile("meuBD.json", "utf8", (erro, texto) => {
+      if (erro) throw "Deu algum erro: " + erro;
+      let meuBD = JSON.parse(texto);
+      let anuncios = meuBD.anuncios;
+      let filtraDados = anuncios.filter((valor) => {
+        //parseFloat(valor.preco) <= parseFloat(preco) &&
+        //valor.categoria.toLowerCase().includes(categoria.toLowerCase()) &&
+        //valor.produto.toLowerCase().includes(produto.toLocaleLowerCase());
+        let precoFilter = parseFloat(valor.preco) <= parseFloat(preco);
+        let categoriaFilter = valor.categoria
+          .toLowerCase()
+          .includes(categoria.toLowerCase());
+        let produtoFilter = valor.produto
+          .toLowerCase()
+          .includes(produto.toLocaleLowerCase());
+        console.log(
+          `valores filtros: ${precoFilter}, ${categoriaFilter}, ${produtoFilter}`
+        );
+        return precoFilter || produtoFilter || categoriaFilter;
+      });
+      let resultado = "";
+      for (let i = 0; i < filtraDados.length; i++) {
+        resultado += "<p" + filtraDados[i].categoria + "'>";
+        resultado += `<b>Produto: </b> ${filtraDados[i].produto}`;
+        resultado += `<b>Descrição: </b> ${filtraDados[i].descricao}`;
+        resultado += `<b>Preço: </b> ${filtraDados[i].preco}`;
+        resultado += "</p><br>";
+        console.log(`Os dados filtrados são: ${resultado}`);
+      }
 
-  fs.readFile("meuBD.json", "utf8", (erro, texto) => {
-    if (erro) throw "Deu algum erro: " + erro;
-    let meuBD = JSON.parse(texto);
-    console.log(meuBD);
-    let anuncios = meuBD.anuncios;
-    let filtrado = anuncios.filter(
-      (valor) =>
-        parseFloat(valor.preco) < preco &&
-        valor.categoria.toLowerCase().includes(categoria.toLowerCase()) &&
-        valor.produto.toLowerCase().includes(produto.toLocaleLowerCase())
-    );
-    let resultado = "";
+      res.json(filtraDados); 
+    */
+  let input = req.query.busca || "";
+  let preco = req.query.preco || 0.0;
+  parseFloat(preco);
 
-    for (let i = 0; i < filtrado.length; i++) {
-      resultado += "<a href='/detalhe/" + filtrado[i].categoria + "'>";
-      resultado += `<b>Produto: </b> ${filtrado[i].produto}`;
-      resultado += `<b>Descrição: </b> ${filtrado[i].descricao}`;
-      resultado += `<b>Preço: </b> ${filtrado[i].preco}`;
-      resultado += "</a><br>";
-    }
+  console.log(preco);
 
-    res.json(meuBD);
+  console.log(`dados nao filtrados ${data.anuncios}`);
+  let anunciosFitlrados = data.anuncios.filter((item) => {
+    let search = input.toLowerCase();
+
+    let nome = item.produto.toLowerCase().includes(search);
+    let categoria = item.categoria.toLowerCase().includes(search);
+    let repreco = parseFloat(item.preco) <= preco;
+
+    // Pesquisa: d
+    // Produto: abc
+    // Descrição: da
+
+    return nome || categoria || repreco;
   });
+
+  console.log(`dados filtrados ${anunciosFitlrados}`);
+
+  res.json(anunciosFitlrados);
 });
 
 app.listen(port, () => {
